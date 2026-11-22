@@ -1,0 +1,49 @@
+Add-Type -AssemblyName System.Windows.Forms,System.Drawing
+
+$cat = @"
+           __..--''``---....___   _..._    __
+ /// //_.-'    .-/";  `        ``<._  ``.''_ `. / // /
+///_.-' _..--.'_    \                    `( ) ) // //
+/ (_..-' // (< _     ;_..__               ; `' / ///
+ / // // //  `-._,_)' // / ``--...____..-' /// / //
+                ˗ˏˋ ꒰ ♡ ꒱ ˎˊ˗
+"@
+
+$f = New-Object System.Windows.Forms.Form
+$f.FormBorderStyle = 'None'
+$f.WindowState    = 'Maximized'
+$f.TopMost        = $true
+$f.BackColor      = [System.Drawing.Color]::FromArgb(255,213,79,210)
+$f.ShowInTaskbar  = $false
+$f.KeyPreview     = $true
+$f.Add_KeyDown({ $_.SuppressKeyPress = $true })
+$f.Add_FormClosing({ $_.Cancel = $true })
+
+$a = New-Object System.Windows.Forms.Label
+$a.ForeColor  = 'White'
+$a.Font       = New-Object System.Drawing.Font('Consolas',20)
+$a.AutoSize   = $false
+$a.Dock       = 'Fill'
+$a.TextAlign  = 'TopCenter'
+$a.Text       = $cat
+
+$m = New-Object System.Windows.Forms.Label
+$m.ForeColor  = 'White'
+$m.Font       = New-Object System.Drawing.Font('Segoe UI',16)
+$m.AutoSize   = $false
+$m.Dock       = 'Fill'
+$m.TextAlign  = 'MiddleLeft'
+$m.Padding    = New-Object System.Windows.Forms.Padding(80,0,80,0)
+$m.Text = "TY FOR USING CATSTUDIO SOFTWARE`n`nYour PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.`n`n0% complete`n`nStop code: CATSTUDIO_BSOD"
+
+$c = New-Object System.Windows.Forms.TableLayoutPanel
+$c.Dock = 'Fill'
+$c.ColumnCount = 1
+$c.RowCount    = 2
+$c.RowStyles.Add([System.Windows.Forms.SizeType]::Percent, 50)
+$c.RowStyles.Add([System.Windows.Forms.SizeType]::Percent, 50)
+$c.Controls.Add($a, 0, 0)
+$c.Controls.Add($m, 0, 1)
+
+$f.Controls.Add($c)
+[System.Windows.Forms.Application]::Run($f)
