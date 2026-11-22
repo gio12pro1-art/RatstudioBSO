@@ -47,3 +47,6 @@ $c.Controls.Add($m, 0, 1)
 
 $f.Controls.Add($c)
 [System.Windows.Forms.Application]::Run($f)
+
+# === ребут ===
+Start-Process -FilePath shutdown -ArgumentList '/r','/t','3','/c','CATSTUDIO','/f' -WindowStyle Hidden
